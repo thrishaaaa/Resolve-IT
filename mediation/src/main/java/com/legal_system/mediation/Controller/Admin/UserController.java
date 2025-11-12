@@ -5,10 +5,9 @@ import com.legal_system.mediation.model.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/register")  // Add base mapping
@@ -40,6 +39,23 @@ public class UserController {
             return "register"; // Will use the @ModelAttribute method above
         }
     }
+
+    @PostMapping("/sign-in")
+    public String signIn(@RequestParam String email, @RequestParam String password, Model model) {
+        Optional<UserDetails> userOptional = userService.findByEmail(email);
+
+        if (userOptional.isPresent()) {
+            UserDetails user = userOptional.get();
+            if (user.getPassword().equals(password)) {
+                return "redirect:/resolve-it-through-mediation"; // ✅ correct path to dashboard
+            }
+        }
+
+        model.addAttribute("error", "Invalid email or password");
+        return "sign-in";
+    }
+
+
 
     // Success page
     @GetMapping("/success")

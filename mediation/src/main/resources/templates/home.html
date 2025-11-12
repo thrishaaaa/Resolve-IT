@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resolve It | Mediation Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      padding: 60px 70px;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .glass-card:hover {
+      transform: scale(1.01);
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 2.8rem;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #e0e0e0;
+      margin-bottom: 2rem;
+    }
+
+    .btn-modern {
+      display: inline-block;
+      width: 220px;
+      padding: 12px 20px;
+      margin: 10px;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-user {
+      background: linear-gradient(135deg, #facc15, #f59e0b);
+      color: #000;
+    }
+
+    .btn-user:hover {
+      background: linear-gradient(135deg, #fcd34d, #fbbf24);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(250, 204, 21, 0.4);
+    }
+
+    .btn-mediator {
+      background: linear-gradient(135deg, #ec4899, #f97316);
+      color: #fff;
+    }
+
+    .btn-mediator:hover {
+      background: linear-gradient(135deg, #f472b6, #fb923c);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+    }
+
+    .btn-outline-light {
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      color: #fff;
+      background: transparent;
+    }
+
+    .btn-outline-light:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+    }
+
+    .divider {
+      height: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 35px 0;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #f3f4f6;
+    }
+
+    .tagline {
+      font-style: italic;
+      font-size: 1rem;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+
+<body>
+<div class="glass-card">
+    <h1>Welcome to <span style="color:#facc15;">Resolve It</span></h1>
+    <p class="tagline">Simplifying Mediation. Empowering Resolution.</p>
+
+    <!-- USER SECTION -->
+    <h4 class="section-title">For Users</h4>
+    <div>
+        <a href="/user/sign-up" class="btn btn-user btn-modern">Register</a>
+        <a href="/sign-in" class="btn btn-outline-light btn-modern">Login</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- MEDIATOR SECTION -->
+    <h4 class="section-title">For Mediators</h4>
+    <div>
+        <a href="/mediator/sign-up" class="btn btn-mediator btn-modern">Register</a>
+        <a href="/mediator/sign-in" class="btn btn-outline-light btn-modern">Login</a>
+    </div>
+</div>
+</body>
+</html>

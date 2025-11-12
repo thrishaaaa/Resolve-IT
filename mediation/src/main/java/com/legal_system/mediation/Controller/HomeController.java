@@ -6,29 +6,38 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
+    // ✅ Landing Page (first page)
+    @GetMapping("/")
+    public String homePage() {
+        return "home"; // home.html will be your new first page
+    }
+
     @GetMapping("/askChatBot")
-    public String askChatbotAbtMediation(){
+    public String askChatbotAbtMediation() {
         return "chatbotIndex";
     }
 
-    @GetMapping("/sign-in")
-    public String login(){
-        return "login";
+
+    /*@GetMapping("/sign-up")
+    public String register() {
+        return "redirect:/register";
+    }*/
+
+    @GetMapping("/user/sign-up")
+    public String userSignUp() {
+        return "redirect:/register"; // user registration page
     }
 
-    @GetMapping("/sign-up")
-    public String register(){
-        return "redirect:/register";
-    }
+
 
     @GetMapping("/resolve-it-through-mediation")
-    public String index(){
-        return "index";
+    public String index() {
+        return "index"; // your dashboard page (index.html)
     }
 
     // Redirect old get-advice link to legal advisors
     @GetMapping("/get-advice")
-    public String getAdvice(){
+    public String getAdvice() {
         return "redirect:/legal-advisors";
     }
 }

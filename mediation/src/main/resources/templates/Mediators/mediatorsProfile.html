@@ -8,7 +8,7 @@
     <style>
         body { background-color: #f8f9fa; }
         .profile-card {
-            background: white;
+            background: #ffffff;
             border-radius: 15px;
             padding: 30px;
             margin-top: 50px;
@@ -52,36 +52,36 @@
     <div class="profile-card text-center">
 
         <!-- Profile Image -->
-        <img th:src="${mediator.professionalDetails.imageUrl}" class="card-img-top" alt="Profile Image">
+        <img th:src="${mediator.professionalDetails != null ? mediator.professionalDetails.imageUrl : '/images/default-profile.png'}" alt="Profile Image">
 
         <!-- Mediator Name -->
         <h2 th:text="${mediator.firstName + ' ' + mediator.lastName}">Mediator Name</h2>
-        <p class="text-muted" th:text="${mediator.professionalDetails.specializations}">Specializations</p>
+        <p class="text-muted" th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.specializations : 'Specializations'}">Specializations</p>
 
         <!-- Stats -->
         <div class="stats row">
             <div class="col-md-4 stat-item">
-                <h4 th:text="${mediator.professionalDetails.casesHandled}">0</h4>
+                <h4 th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.casesHandled : 0}">0</h4>
                 <p>Cases Handled</p>
             </div>
             <div class="col-md-4 stat-item">
-                <h4 th:text="${mediator.professionalDetails.casesWon}">0</h4>
+                <h4 th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.casesWon : 0}">0</h4>
                 <p>Cases Won</p>
             </div>
             <div class="col-md-4 stat-item">
-                <h4 th:text="${mediator.professionalDetails.casesHandled != 0 ? (mediator.professionalDetails.casesWon / mediator.professionalDetails.casesHandled * 100) + '%' : '0%'}">0%</h4>
+                <h4 th:text="${mediator.professionalDetails != null && mediator.professionalDetails.casesHandled != 0 ? (mediator.professionalDetails.casesWon / mediator.professionalDetails.casesHandled * 100) + '%' : '0%'}">0%</h4>
                 <p>Success Rate</p>
             </div>
         </div>
 
         <!-- Info -->
         <div class="info text-start mt-4">
-            <p><strong>License:</strong> <span th:text="${mediator.professionalDetails.licenseNumber}">L12345</span></p>
-            <p><strong>Experience:</strong> <span th:text="${mediator.professionalDetails.yearsExperience}">5</span> years</p>
-            <p><strong>Education:</strong> <span th:text="${mediator.professionalDetails.education}">LLB, Delhi University</span></p>
-            <p><strong>Expertise:</strong> <span th:text="${mediator.professionalDetails.expertiseAreas}">Civil, Family & Property Disputes</span></p>
+            <p><strong>License:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.licenseNumber : '-'}">L12345</span></p>
+            <p><strong>Experience:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.yearsExperience : 0}">5</span> years</p>
+            <p><strong>Education:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.education : '-'}">LLB, Delhi University</span></p>
+            <p><strong>Expertise:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.expertiseAreas : '-'}">Civil, Family & Property Disputes</span></p>
             <p><strong>Email:</strong> <a th:href="'mailto:' + ${mediator.email}" th:text="${mediator.email}">email@example.com</a></p>
-            <p><strong>Bio:</strong> <span th:text="${mediator.professionalDetails.bio}">Mediator biography goes here.</span></p>
+            <p><strong>Bio:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.bio : 'No bio available.'}">Mediator biography goes here.</span></p>
         </div>
 
         <a href="/mediators/mediators-profiles" class="btn btn-secondary btn-back">Back to Mediators</a>

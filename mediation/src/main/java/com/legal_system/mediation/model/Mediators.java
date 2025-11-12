@@ -1,6 +1,7 @@
 package com.legal_system.mediation.model;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Time;
 import java.util.Date;
@@ -43,7 +44,9 @@ public class Mediators {
     @Column(name="phone")
     private long phone;
 
-    @Column(name="date_of_birth")
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "date_of_birth")
     private Date dob;
 
     @Column(name="gender")

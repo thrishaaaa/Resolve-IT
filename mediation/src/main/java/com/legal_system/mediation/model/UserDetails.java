@@ -10,12 +10,12 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="user_details")
 public class UserDetails {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
     private int id;
-    
+
     @Column(name="name")
     private String name;
 
@@ -37,6 +37,10 @@ public class UserDetails {
     @Column(name="pincode")
     private String pincode;
 
+    @Column(name="password")
+    private String password;
+
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -100,5 +104,12 @@ public class UserDetails {
     public void setPincode(String pincode) {
         this.pincode = pincode;
     }
-    
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
