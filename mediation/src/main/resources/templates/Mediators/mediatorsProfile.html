@@ -3,88 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${mediator.firstName + ' ' + mediator.lastName}">Mediator Profile</title>
+    <title th:text="${mediator.firstName + ' ' + mediator.lastName + ' - ResolveIt'}">Mediator Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
-        body { background-color: #f8f9fa; }
+        /* Using consistent colors from style.css */
+        body { background-color: #f4f6f9; }
+        .page-header {
+            /* Using consistent blue gradient: #6c63ff (primary) to #4c49ed (secondary) */
+            background: linear-gradient(135deg, #6c63ff 0%, #4c49ed 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 0;
+        }
         .profile-card {
             background: #ffffff;
             border-radius: 15px;
             padding: 30px;
-            margin-top: 50px;
-            box-shadow: 0px 2px 12px rgba(0,0,0,0.1);
+            /* Pulling the card up to overlap the header for a modern look */
+            margin-top: -80px; 
+            position: relative;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.15);
         }
         .profile-card img {
             border-radius: 50%;
             width: 180px;
             height: 180px;
             object-fit: cover;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            /* Primary color border */
+            border: 5px solid #6c63ff; 
         }
-        h2 { font-weight: bold; margin-bottom: 10px; }
-        .info p { margin: 5px 0; font-size: 1rem; color: #555; }
+        h2 { font-weight: bold; margin-bottom: 5px; }
+        .info p { margin: 8px 0; font-size: 1rem; color: #333; }
         .stats {
-            background: #f1f1f1;
+            background: #f8f9fa; 
             border-radius: 10px;
             padding: 15px;
-            margin-top: 20px;
+            margin: 25px 0;
+            border: 1px solid #eee;
         }
-        .stat-item { text-align: center; }
-        .stat-item h4 { margin: 0; font-weight: bold; }
-        .btn-back { margin-top: 20px; }
-        .booking-section { margin-top: 30px; text-align: left; }
+        .stat-item { 
+            text-align: center; 
+            border-right: 1px solid #eee; 
+        }
+        .stat-item:last-child {
+            border-right: none;
+        }
+        .stat-item h4 { 
+            margin: 0; 
+            font-weight: bold; 
+            color: #6c63ff; 
+        }
+        .stat-item p { 
+            font-size: 0.85rem; 
+            color: #666; 
+            margin-bottom: 0; 
+        }
+        .specialization-badge {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin: 3px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand d-flex align-items-center" href="/resolve-it-through-mediation">
             <img src="https://img.icons8.com/ios-filled/24/ffffff/scales.png" class="me-2" alt="Logo" />
             ResolveIt
         </a>
     </div>
 </nav>
 
-<!-- Profile Card -->
+<div class="page-header">
+    <div class="container text-center">
+        <p class="lead mb-0">Mediator Profile</p>
+        <h1 class="display-5" th:text="${mediator.firstName + ' ' + mediator.lastName}">Mediator Name</h1>
+    </div>
+</div>
+
 <div class="container">
     <div class="profile-card text-center">
 
-        <!-- Profile Image -->
-        <img th:src="${mediator.professionalDetails != null ? mediator.professionalDetails.imageUrl : '/images/default-profile.png'}" alt="Profile Image">
+        <img th:src="${mediator.professionalDetails != null and mediator.professionalDetails.imageUrl != null ? mediator.professionalDetails.imageUrl : '/images/default-profile.png'}" alt="Profile Image">
 
-        <!-- Mediator Name -->
         <h2 th:text="${mediator.firstName + ' ' + mediator.lastName}">Mediator Name</h2>
-        <p class="text-muted" th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.specializations : 'Specializations'}">Specializations</p>
+        
+        <div class="d-flex justify-content-center gap-3 mb-4">
+            <a th:href="@{'/mediators/' + ${mediator.id} + '/chat'}" class="btn btn-primary btn-lg">
+                <i class="bi bi-chat-dots me-2"></i> Send Message
+            </a>
+        </div>
 
-        <!-- Stats -->
-        <div class="stats row">
+        <div class="stats row mx-auto">
             <div class="col-md-4 stat-item">
                 <h4 th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.casesHandled : 0}">0</h4>
                 <p>Cases Handled</p>
             </div>
             <div class="col-md-4 stat-item">
                 <h4 th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.casesWon : 0}">0</h4>
-                <p>Cases Won</p>
+                <p>Successful Outcomes</p>
             </div>
             <div class="col-md-4 stat-item">
-                <h4 th:text="${mediator.professionalDetails != null && mediator.professionalDetails.casesHandled != 0 ? (mediator.professionalDetails.casesWon / mediator.professionalDetails.casesHandled * 100) + '%' : '0%'}">0%</h4>
+                <h4 th:with="rate=${mediator.professionalDetails != null and mediator.professionalDetails.casesHandled != 0 ? (mediator.professionalDetails.casesWon / mediator.professionalDetails.casesHandled * 100) : 0}" 
+                    th:text="${#numbers.formatDecimal(rate, 0, 0) + '%'}">0%</h4>
                 <p>Success Rate</p>
             </div>
         </div>
 
-        <!-- Info -->
         <div class="info text-start mt-4">
-            <p><strong>License:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.licenseNumber : '-'}">L12345</span></p>
-            <p><strong>Experience:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.yearsExperience : 0}">5</span> years</p>
-            <p><strong>Education:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.education : '-'}">LLB, Delhi University</span></p>
-            <p><strong>Expertise:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.expertiseAreas : '-'}">Civil, Family & Property Disputes</span></p>
-            <p><strong>Email:</strong> <a th:href="'mailto:' + ${mediator.email}" th:text="${mediator.email}">email@example.com</a></p>
-            <p><strong>Bio:</strong> <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.bio : 'No bio available.'}">Mediator biography goes here.</span></p>
+            <h5 class="mb-3 text-primary"><i class="bi bi-person-lines-fill me-2"></i>Professional Details</h5>
+            
+            <p>
+                <strong><i class="bi bi-clock me-2"></i>Experience:</strong> 
+                <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.yearsExperience + ' years' : 'N/A'}">5 years</span>
+            </p>
+            <p>
+                <strong><i class="bi bi-book me-2"></i>Education:</strong> 
+                <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.education : 'N/A'}">LLB, Delhi University</span>
+            </p>
+            <p>
+                <strong><i class="bi bi-person-badge me-2"></i>License:</strong> 
+                <span th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.licenseNumber : 'N/A'}">L12345</span>
+            </p>
+
+            <h5 class="mt-4 mb-3 text-primary"><i class="bi bi-tools me-2"></i>Areas of Expertise</h5>
+            <div class="mb-4">
+                <div th:if="${mediator.professionalDetails != null and mediator.professionalDetails.specializations != null and not #strings.isEmpty(mediator.professionalDetails.specializations)}">
+                    <span th:each="spec : ${#strings.arraySplit(mediator.professionalDetails.specializations.replace('[','').replace(']','').replace('&quot;',''), ',')}" 
+                          class="specialization-badge" th:text="${spec.trim()}">Civil</span>
+                </div>
+                <div th:if="${mediator.professionalDetails == null or mediator.professionalDetails.specializations == null or #strings.isEmpty(mediator.professionalDetails.specializations)}">
+                    <span class="text-muted">No specializations listed.</span>
+                </div>
+            </div>
+
+            <h5 class="mt-4 mb-3 text-primary"><i class="bi bi-person-check me-2"></i>About the Mediator</h5>
+            <p class="text-muted" th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.bio : 'No comprehensive biography available.'}">Mediator biography goes here.</p>
         </div>
 
-        <a href="/mediators/mediators-profiles" class="btn btn-secondary btn-back">Back to Mediators</a>
+        <a href="/mediators/mediators-profiles" class="btn btn-outline-secondary mt-3">
+            <i class="bi bi-arrow-left me-2"></i> Back to Mediators List
+        </a>
     </div>
 </div>
 

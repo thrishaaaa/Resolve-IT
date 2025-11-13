@@ -28,7 +28,7 @@ public class MediatorSelectionService {
         List<Mediators> allMediators = mediatorsRepository.findAll();
 
         // 2. Filter for Eligibility: 
-        // A) Must have professional details for ranking (prevents NullPointerException)
+        // A) Must have professional details for ranking (prevents primary NullPointerException if details object is null)
         // B) Must be explicitly verified (using the actual boolean field, proxy for true availability)
         List<Mediators> availableMediators = allMediators.stream()
                 // Filter A: Must have professional details attached for ranking
@@ -42,24 +42,26 @@ public class MediatorSelectionService {
         }
 
         // 3. Apply the Multi-criteria Ranking (Comparator Chaining)
+        // FIX: Used Comparator.nullsLast(Comparator.reverseOrder()) to safely handle 'null' values 
+        // in the numeric fields (successRate, casesWon, yearsExperience) by ranking them lowest.
         Comparator<Mediators> rankingComparator = Comparator
                 // Comparator 1 (Highest Priority): Rating (using successRate as proxy) - Highest first
-                .comparing((Mediators m) -> {
-                    MediatorProfessionalDetails details = m.getProfessionalDetails();
-                    return details.getSuccessRate();
-                }, Comparator.reverseOrder())
+                .comparing(
+                    (Mediators m) -> m.getProfessionalDetails().getSuccessRate(),
+                    Comparator.nullsLast(Comparator.reverseOrder())
+                )
 
                 // Comparator 2: Successful Cases (casesWon) - Highest first
-                .thenComparing((Mediators m) -> {
-                    MediatorProfessionalDetails details = m.getProfessionalDetails();
-                    return details.getCasesWon();
-                }, Comparator.reverseOrder())
+                .thenComparing(
+                    (Mediators m) -> m.getProfessionalDetails().getCasesWon(),
+                    Comparator.nullsLast(Comparator.reverseOrder())
+                )
 
                 // Comparator 3: Years of Experience - Highest first
-                .thenComparing((Mediators m) -> {
-                    MediatorProfessionalDetails details = m.getProfessionalDetails();
-                    return details.getYearsExperience();
-                }, Comparator.reverseOrder());
+                .thenComparing(
+                    (Mediators m) -> m.getProfessionalDetails().getYearsExperience(),
+                    Comparator.nullsLast(Comparator.reverseOrder())
+                );
 
         // 4. Find the single best mediator
         return availableMediators.stream()

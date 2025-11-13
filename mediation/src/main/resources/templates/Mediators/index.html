@@ -5,50 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mediators - ResolveIt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
-        body { background-color: #f8f9fa; }
+        /* Custom styles for the mediator card UI */
+        body { background-color: #f4f6f9; }
+        .page-header {
+            /* Using consistent blue gradient from style.css variables: #6c63ff and #4c49ed */
+            background: linear-gradient(135deg, #6c63ff 0%, #4c49ed 100%);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
         .mediator-card {
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0px 2px 12px rgba(0,0,0,0.08);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: transform 0.2s;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .mediator-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0px 4px 16px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
-        .mediator-card img {
-            width: 100%;
-            height: 200px;
+        .mediator-img {
+            width: 120px;
+            height: 120px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 50%;
+            /* Using consistent primary color for border */
+            border: 4px solid #6c63ff;
         }
-        .mediator-name { font-weight: 600; font-size: 1.2rem; margin-top: 10px; }
-        .specializations { font-size: 0.9rem; color: #555; margin-bottom: 10px; }
+        .specialization-badge {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin: 3px;
+            display: inline-block;
+        }
+        .badge-available {
+            background-color: #28a745; /* Success color */
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        .badge-busy {
+            background-color: #dc3545; /* Danger color */
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand d-flex align-items-center" href="#">
             <img src="https://img.icons8.com/ios-filled/24/ffffff/scales.png" class="me-2" alt="Logo" />
             ResolveIt
         </a>
     </div>
 </nav>
 
+<div class="page-header">
+    <div class="container text-center">
+        <h1 class="display-4 mb-3">
+            <i class="bi bi-person-workspace me-3"></i>Find Your Mediator
+        </h1>
+        <p class="lead">Connect with certified mediation professionals across all domains</p>
+    </div>
+</div>
+
 <div class="container">
+
+    <div class="filter-section">
+        <form method="get" action="/mediators">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="search" class="form-control"
+                           placeholder="Search by name, city, or specialization...">
+                </div>
+                <div class="col-md-4">
+                    <select name="specialization" class="form-select">
+                        <option value="">All Specializations</option>
+                        <option value="Civil">Civil</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="Family">Family Law</option>
+                        <option value="Real Estate">Real Estate</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="row">
-        <div class="col-md-4 mb-4" th:each="mediator : ${mediators}">
+        <div class="col-md-6" th:each="mediator : ${mediators}">
             <div class="mediator-card">
-                <img th:src="${mediator.professionalDetails != null ? mediator.professionalDetails.imageUrl : '/images/default-profile.png'}" alt="Mediator Image">
-                <div class="mediator-name" th:text="${mediator.firstName + ' ' + mediator.lastName}">Rajesh Kumar</div>
-                <div class="specializations" th:text="${mediator.professionalDetails != null ? mediator.professionalDetails.specializations : 'Specializations'}">["Civil", "Commercial"]</div>
-                <a th:href="@{'/mediators/' + ${mediator.id}}" class="btn btn-primary btn-sm w-100">View Profile</a>
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img th:src="${mediator.professionalDetails != null ? mediator.professionalDetails.imageUrl : '/images/default-profile.png'}"
+                             alt="Mediator Image" class="mediator-img mb-3">
+                        <div>
+                            <span th:class="${mediator.availabilityStatus == true ? 'badge-available' : 'badge-busy'}">
+                                <i class="bi bi-circle-fill me-1"></i>
+                                <span th:text="${mediator.availabilityStatus == true ? 'Available' : 'Busy'}">Available</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <h4 class="mb-3 mediator-name" th:text="${mediator.firstName + ' ' + mediator.lastName}">Mediator Name</h4>
+
+                        <p class="mb-2">
+                            <i class="bi bi-tools me-2 text-primary"></i>
+                            <small class="text-muted">Specializations:</small>
+                        </p>
+                        <div class="mb-3" th:if="${mediator.professionalDetails != null and mediator.professionalDetails.specializations != null and not #strings.isEmpty(mediator.professionalDetails.specializations)}">
+                            <span th:each="spec : ${#strings.arraySplit(mediator.professionalDetails.specializations.replace('[','').replace(']','').replace('&quot;',''), ',')}" class="specialization-badge" th:text="${spec.trim()}">Civil</span>
+                        </div>
+                        <div class="mb-3" th:unless="${mediator.professionalDetails != null and mediator.professionalDetails.specializations != null and not #strings.isEmpty(mediator.professionalDetails.specializations)}">
+                            <span class="text-muted small">Not specified</span>
+                        </div>
+
+
+                        <div class="d-flex gap-2">
+                            <a th:href="@{'/mediators/' + ${mediator.id}}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-eye"></i> View Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

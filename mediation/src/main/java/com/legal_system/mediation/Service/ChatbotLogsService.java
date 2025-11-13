@@ -1,7 +1,6 @@
 package com.legal_system.mediation.Service;
 
 import com.legal_system.mediation.model.ChatbotLogs;
-import com.legal_system.mediation.model.ChatbotLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

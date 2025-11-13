@@ -51,4 +51,9 @@ public class MediatorsService {
     public Optional<Mediators> findByEmail(String email) {
         return mediatorsRepository.findByEmail(email);
     }
+
+    // REQUIRED ADDITION: Method to save any updated mediator object
+    public Mediators updateMediator(Mediators mediator) {
+        return mediatorsRepository.save(mediator);
+    }
 }

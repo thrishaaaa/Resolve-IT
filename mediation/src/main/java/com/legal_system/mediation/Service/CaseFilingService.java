@@ -14,6 +14,8 @@ import java.util.Optional;
 
 @Service
 public class CaseFilingService {
+    
+    // ... existing injections ...
 
     @Autowired
     private UserDetailsRepository userRepository;
@@ -27,10 +29,14 @@ public class CaseFilingService {
     @Autowired
     private ChatbotLogsRepository chatbotLogsRepository;
 
-    // --- NEW INJECTION ---
+    // --- EXISTING INJECTION ---
     @Autowired
     private MediatorSelectionService mediatorSelectionService; 
-    // --- END NEW INJECTION ---
+    
+    // --- REQUIRED ADDITION: Inject MediatorsService to update status ---
+    @Autowired
+    private MediatorsService mediatorsService;
+    // --- END REQUIRED ADDITION ---
 
 
     /**
@@ -74,11 +80,9 @@ public class CaseFilingService {
         Party party2 = findOrCreateParty(party2Email);
         UserDetails party2User = party2.getUser(); 
         
-        // --- NEW STEP: 3. Select Best Mediator ---
+        // 3. Select Best Mediator
         Optional<Mediators> selectedMediator = mediatorSelectionService.selectBestMediator();
-        // Assign the selected mediator or null if none are available
         Mediators assignedMediator = selectedMediator.orElse(null); 
-        // --- END NEW STEP ---
 
 
         // 4. Create new Case
@@ -87,11 +91,21 @@ public class CaseFilingService {
         newCase.setDescription(caseDescription);
         newCase.setParty1(party1User);
         newCase.setParty2(party2User);
-        newCase.setMediator(assignedMediator); // <-- ASSIGNED HERE
+        newCase.setMediator(assignedMediator);
         newCase.setCreated_at(LocalDateTime.now());
         newCase.setStatus("Open");
 
         Cases savedCase = casesRepository.save(newCase);
+
+        // --- REQUIRED CHANGE: Update mediator availability to FALSE ---
+        if (assignedMediator != null) {
+            // Set the mediator's availability flag to false
+            assignedMediator.setIs_verified(false);
+            
+            // Save the updated mediator object to persist the status change
+            mediatorsService.updateMediator(assignedMediator);
+        }
+        // --- END REQUIRED CHANGE ---
 
         // 5. Log the conversation with the new case_id
         ChatbotLogs log = new ChatbotLogs();

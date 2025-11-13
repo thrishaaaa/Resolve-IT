@@ -44,6 +44,16 @@ public class Mediators {
     @Column(name="phone")
     private long phone;
 
+    @Transient
+    private Boolean availabilityStatus;
+
+    // ADDED: Transient fields for Rating and Total Reviews
+    @Transient
+    private Double rating;
+
+    @Transient
+    private Integer totalReviews;
+
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date_of_birth")
@@ -139,6 +149,31 @@ public class Mediators {
         this.status = status;
     }
 
+    public Boolean getAvailabilityStatus() {
+        return availabilityStatus;
+    }
+
+    public void setAvailabilityStatus(Boolean availabilityStatus) {
+        this.availabilityStatus = availabilityStatus;
+    }
+
+    // ADDED: Getters and Setters for the new UI fields
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Integer getTotalReviews() {
+        return totalReviews;
+    }
+
+    public void setTotalReviews(Integer totalReviews) {
+        this.totalReviews = totalReviews;
+    }
+
     public Boolean getIs_verified() {
         return is_verified;
     }
@@ -157,7 +192,4 @@ public class Mediators {
     public void setProfessionalDetails(MediatorProfessionalDetails professionalDetails) {
         this.professionalDetails = professionalDetails;
     }
-
-
-
 }
